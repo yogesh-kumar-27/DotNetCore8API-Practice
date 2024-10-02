@@ -1,0 +1,6 @@
+@EFDBfirst_HostAddress = http://localhost:5042
+
+GET {{EFDBfirst_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
