@@ -10,20 +10,34 @@ namespace EFDBfirst.Controllers
     [ApiController]
     public class SupplierController : ControllerBase
     {
-        private readonly IRepository<Supplier> repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SupplierController(IRepository<Supplier> repository)
+        //private readonly IRepository<Supplier> repository;
+
+        //public SupplierController(IRepository<Supplier> repository)
+        //{
+        //    this.repository = repository;
+        //}
+
+
+        //private readonly ISupplier _supplier;
+
+        //public SupplierController(ISupplier supplier)
+        //{
+        //    this._supplier = supplier;
+        //}
+
+        public SupplierController(IUnitOfWork unitOfWork)
         {
-            this.repository = repository;
+            this._unitOfWork = unitOfWork;
         }
-
         [HttpGet]
 
         public async Task<ActionResult> GetSupplier()
         {
             try
             {
-                var Category = await repository.GetAllAsync();
+                var Category = await _unitOfWork.Supplier.GetAllAsync();
 
                 return Ok(Category);
             }
@@ -40,7 +54,7 @@ namespace EFDBfirst.Controllers
         {
             try
             {
-                var Category = await repository.GetById(SupplierId);
+                var Category = await _unitOfWork.Supplier.GetById(SupplierId);
 
                 return Ok(Category);
             }
@@ -51,7 +65,8 @@ namespace EFDBfirst.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult> CreateSupplier([FromBody] Supplier supplier) {
+        public async Task<ActionResult> CreateSupplier([FromBody] Supplier supplier)
+        {
 
             try
             {
@@ -60,8 +75,10 @@ namespace EFDBfirst.Controllers
                     return BadRequest();
                 }
 
-                    var createSupplier = await repository.Add(supplier);
-                    return Ok(createSupplier);
+                var createSupplier = await _unitOfWork.Supplier.Add(supplier);
+                _unitOfWork.save();
+
+                return Ok(createSupplier);
 
             }
             catch (Exception)
@@ -69,7 +86,7 @@ namespace EFDBfirst.Controllers
 
                 throw;
             }
-        
+
         }
     }
 }

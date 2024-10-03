@@ -18,8 +18,9 @@ builder.Services.AddDbContext<NorthwindContext>(option =>
 });
 
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ISupplier, SupplierRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
